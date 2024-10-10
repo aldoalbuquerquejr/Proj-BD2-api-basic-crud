@@ -1,5 +1,5 @@
 import "./App.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 const api = axios.create({
@@ -9,7 +9,6 @@ const api = axios.create({
 function App() {
   const [filmes, setFilmes] = useState([]);
   const [movie, setMovie] = useState([]);
-  // const [data, setData] = useState([]);
   const [title, setTitle] = useState('');
   const [year, setYear] = useState();
   const [genre, setGenre] = useState('');
@@ -36,20 +35,6 @@ function App() {
     setSelect('5')
   }
 
-  // useEffect(() => {
-  //   setData({
-  //     title: '',
-  //     year: '',
-  //     genre: ''
-  //   })
-  // }, [])
-  // useEffect(() => {
-  //   api.get("/movies").then((response) => {
-  //     console.log(response.data);
-  //     setFilmes(response.data);
-  //   });
-  // }, []);
-
   function getMovies() {
     api.get("/movies").then((response) => {
       console.log(response.data);
@@ -63,18 +48,6 @@ function App() {
     setGenre('')
     setId('')
   }
-
-  // function putMovie() {
-  //   api.put(`/movies/${id}`, {
-  //     title,
-  //     year,
-  //     genre
-  //   }).then(response => {
-  //     console.log(response)
-  //   })
-  //   clearStates()
-  //   window.location.reload()
-  // }
 
   function patchMovie() {
     if (!id) {
