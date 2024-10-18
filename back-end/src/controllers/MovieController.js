@@ -1,8 +1,18 @@
 import Movie from "../models/Movie.js";
+import logger from "../logger/Logger.js";
 
 async function getMovies(request, response) {
-  const movies = await Movie.find();
-  return response.status(200).json(movies);
+  let register = "";
+  try {
+    const movies = await Movie.find();
+    register = movies;
+    if(register != '') {
+      logger.info("Success on getting all users!")
+    }
+  }catch(error) {
+    logger.error("Couldn't get all users")
+  }
+  return response.status(200).json(register);
 }
 
 async function getMovieById(request, response) {
@@ -34,13 +44,13 @@ async function updateMovie(request, response) {
     title,
     year,
     genre,
-  };
+  }
   try {
     await Movie.findByIdAndUpdate(
       { _id: id },
       { $set: updatedMovie },
       { new: true }
-    );
+    )
   } catch (error) {
     return response
       .status(400)
