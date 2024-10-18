@@ -1,19 +1,51 @@
 import Movie from "../models/Movie.js";
-
+import logger from "../logger/logger.js";
 async function getMovies(request, response) {
-  const movies = await Movie.find();
-  return response.status(200).json(movies);
-}
+  let register = "";
+  try{
+   const movies = await Movie.find();
+   register = movies;
+   if(register != ''){
+     logger.info('sucessfuly get movies');
+   }
+  }catch(error){
+   logger.error("couldn't get movies");
+  }
+   return response.status(200).json(register);
+ }
 
 async function getMovieById(request, response) {
   const id = request.params.id;
-  const movie = await Movie.findById({ _id: id });
-  return response.status(200).json(movie);
+  let register = "";
+  try{
+    const movie = await Movie.findById({ _id: id });
+    register = movie;
+    if(register != ""){
+      logger.info('sucessfuly get movie by id');
+    }
+  }catch(error){
+      logger.error("couldn't get movie by id");
+      return response.status(400).json({ response: "Movie has not been found!" });
+  
+    }
+  
+  return response.status(200).json(register);
 }
 
 async function createMovie(request, response) {
   const movie = request.body;
-  const newMovie = await Movie.create(movie);
+  register = "";
+  try{
+    register = await Movie.create(movie);
+    if(register != ""){
+      logger.info('sucessfuly created movie');
+    }
+  }catch(error){
+    logger.error("couldn't create movie");
+    return response
+      .status(400)
+      .json({ response: "Movie has not been created!", error: error.message });
+  }
   return response
     .status(201)
     .json({ response: "Movie has been sucessfuly created!", newMovie });
@@ -21,7 +53,15 @@ async function createMovie(request, response) {
 
 async function deleteMovie(request, response) {
   const id = request.params.id;
-  await Movie.findByIdAndDelete({ _id: id });
+  try{
+    await Movie.findByIdAndDelete({ _id: id });
+  }catch(error){
+    logger.error("couldn't delete movie");
+    return response
+      .status(400)
+      .json({ response: "Movie has not been found!", error: error.message });
+  }
+  logger.info('sucessfuly deleted movie');
   return response
     .status(200)
     .json({ response: "Movie has been sucessfuly deleted!" });
@@ -42,10 +82,12 @@ async function updateMovie(request, response) {
       { new: true }
     );
   } catch (error) {
+    logger.error("couldn't update movie");
     return response
       .status(400)
       .json({ response: "Movie has not been found!", error: error.message });
   }
+  logger.info('sucessfuly updated movie');
   return response
     .status(200)
     .json({ response: "Movie has been sucessfuly updated!" });
