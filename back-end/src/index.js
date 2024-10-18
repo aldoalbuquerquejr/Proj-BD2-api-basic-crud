@@ -10,8 +10,6 @@ app.use(express.json());
 app.use(cors());
 app.use(routes);
 
-
-
 connectDatabase()
   .then(() => {
     app.listen(3000, () => {

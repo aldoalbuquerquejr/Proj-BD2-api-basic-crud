@@ -1,5 +1,6 @@
 import Movie from "../models/Movie.js";
 import logger from "../logger/logger.js";
+
 async function getMovies(request, response) {
   let register = "";
   try{
@@ -74,13 +75,13 @@ async function updateMovie(request, response) {
     title,
     year,
     genre,
-  };
+  }
   try {
     await Movie.findByIdAndUpdate(
       { _id: id },
       { $set: updatedMovie },
       { new: true }
-    );
+    )
   } catch (error) {
     logger.error("couldn't update movie");
     return response
