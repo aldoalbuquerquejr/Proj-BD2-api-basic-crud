@@ -1,14 +1,14 @@
-import winston from "winston";
+import winston from 'winston';
 
 const logger = winston.createLogger({
     transports: [
-        new winston.transports.Console()
+        new winston.transports.Console(),
     ],
     format: winston.format.combine(
         winston.format.timestamp({
-            format: 'DD-MMM-YYYY HH:mm:ss'
+            format: 'YYYY-MM-DD HH:mm:ss'
         }),
-        winston.format.printf(info => `${info.timestamp}: ${info.message}`)
+        winston.format.printf(info => `${info.timestamp}:${info.message}`)
     )
 });
 

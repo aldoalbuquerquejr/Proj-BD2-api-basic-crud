@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
-
+import dotenv from "dotenv";
+dotenv.config();
 async function connectDatabase() {
   await mongoose.connect(
-    "mongodb+srv://aldojunior:r6oQLVLybkh5MpSo@cluster0.jwbhv.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    process.env.DB_MONGO_URL
   );
 }
 
