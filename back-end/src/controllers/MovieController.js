@@ -22,7 +22,7 @@ async function getMovieById(request, response) {  //GET BY ID
     const movie = await Movie.findById({ _id: id });
     register = movie;
     if (register != "") {
-      logger.info('Movie successfully got by ID');
+      logger.info('Movie successfully returned by ID');
     }
   } catch (error) {
     logger.error("Could not get movie by id");
