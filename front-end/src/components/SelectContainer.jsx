@@ -13,6 +13,8 @@ export function SelectContainer() {
     const [year, setYear] = useState();
     const [genre, setGenre] = useState('');
     const [id, setId] = useState();
+    const [isMovieTableVisible, setIsMovieTableVisible] = useState(false);
+    const [isMovieByIDVisible, setIsMovieByIDVisible] = useState(false);
 
     function optionOne() {
         setSelect('1')
@@ -46,6 +48,7 @@ export function SelectContainer() {
             console.log(response.data);
             setFilmes(response.data);
         });
+        setIsMovieTableVisible(true);
     }
 
     function getMoviebyId() {
@@ -56,6 +59,7 @@ export function SelectContainer() {
         api.get(`/movies/${id}`).then(response => {
             console.log(response.data)
             setMovie(response.data)
+            setIsMovieByIDVisible(true);
         }).catch(error => {
             window.alert('Movie ID not found!');
             console.error(error);
@@ -155,76 +159,88 @@ export function SelectContainer() {
 
             {select === '1' && (
                 <section className="flex flex-col items-center p-40 h-auto">
-                    <button className="text-slate-100 bg-violet-900 hover:bg-violet-700  active:bg-violet-800 active:shadow-inner rounded-md h-10 w-32" onClick={getMovies}>Exibir</button>
-                    <ul>
-                        {filmes.map((filme) => (
-                            <>
-                                <br />
-                                <li key={filme._id}>
-                                    <span className="font-semibold">Título:</span> {filme.title}
-                                </li>
-                                <li key={filme._id}>
-                                    <span className="font-semibold">Ano:</span> {filme.year}
-                                </li>
-                                <li key={filme._id}>
-                                    <span className="font-semibold">Gênero:</span> {filme.genre}
-                                </li>
-                                <li key={filme._id}>
-                                    <span className="font-semibold">ID:</span> {filme._id}
-                                </li>
-                            </>
-                        ))}
-                    </ul>
+                    <button className="text-slate-100 bg-violet-900 hover:bg-violet-700  active:bg-violet-800 active:shadow-inner rounded-md h-10 w-32" onClick={getMovies}>Show Up</button>
+                    {isMovieTableVisible && (
+                        <>
+                            <br />
+                            <table className="bg-slate-50 text-black rounded-md overflow-hidden">
+                                <thead>
+                                    <tr>
+                                        <th className="border py-2 px-4">ID</th>
+                                        <th className="border py-2 px-4">Title</th>
+                                        <th className="border py-2 px-4">Year</th>
+                                        <th className="border py-2 px-4">Genre</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filmes.map(filme => (
+                                        <tr key={filme._id}>
+                                            <td className="border py-2 px-4">{filme._id}</td>
+                                            <td className="border py-2 px-4">{filme.title}</td>
+                                            <td className="border py-2 px-4">{filme.year}</td>
+                                            <td className="border py-2 px-4">{filme.genre}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </>
+                    )}
                 </section>
             )}
 
             {select === '2' && (
-                <section className="flex flex-col justify-start items-start gap-3 p-40 h-auto">
-                    <input className="text-gray-950 rounded-md h-10 w-64" type="text" placeholder="Informar ID" onChange={event => setId(event.target.value)} />
-                    <button className="text-slate-100 bg-violet-900 hover:bg-violet-700  active:bg-violet-800 active:shadow-inner rounded-md h-10 w-64" onClick={getMoviebyId}>Buscar</button>
-                    {movie.title ? (
-                        <ul>
+                <section className="flex flex-col items-center gap-3 p-40 h-auto">
+                    <input className="text-gray-950 pl-2 rounded-md h-10 w-64" type="text" placeholder="Type ID" onChange={event => setId(event.target.value)} />
+                    <button className="text-slate-100 bg-violet-900 hover:bg-violet-700  active:bg-violet-800 active:shadow-inner rounded-md h-10 w-64" onClick={getMoviebyId}>Search</button>
+                    {isMovieByIDVisible && (
+                        <>
                             <br />
-                            <li key={movie.id}>
-                                <span className="font-semibold">Título:</span> {movie.title}
-                            </li>
-                            <li key={movie.id}>
-                                <span className="font-semibold">Ano:</span> {movie.year}
-                            </li>
-                            <li key={movie.id}>
-                                <span className="font-semibold">Gênero:</span> {movie.genre}
-                            </li>
-                            <li key={movie.id}>
-                                <span className="font-semibold">ID:</span> {movie._id}
-                            </li>
-                        </ul>
-                    ) : null}
+                            <table className="bg-slate-50 text-black rounded-md overflow-hidden">
+                                <thead>
+                                    <tr>
+                                        <th className="border py-2 px-4">ID</th>
+                                        <th className="border py-2 px-4">Title</th>
+                                        <th className="border py-2 px-4">Year</th>
+                                        <th className="border py-2 px-4">Genre</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr key={movie._id}>
+                                        <td className="border py-2 px-4">{movie._id}</td>
+                                        <td className="border py-2 px-4">{movie.title}</td>
+                                        <td className="border py-2 px-4">{movie.year}</td>
+                                        <td className="border py-2 px-4">{movie.genre}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </>
+                    )}
                 </section>
             )}
 
             {select === '3' && (
                 <section className="flex flex-col items-center gap-3 p-40 h-auto">
-                    <input className="text-gray-950 rounded-md h-10 w-64" type="text" placeholder="Inserir título" onChange={event => setTitle(event.target.value)} />
-                    <input className="text-gray-950 rounded-md h-10 w-64" type="text" placeholder="Inserir ano" onChange={event => setYear(event.target.value)} />
-                    <input className="text-gray-950 rounded-md h-10 w-64" type="text" placeholder="Inserir gênero" onChange={event => setGenre(event.target.value)} />
-                    <button className="text-slate-100 bg-green-800 hover:bg-green-600  active:bg-green-700 active:shadow-inner rounded-md h-10 w-64" onClick={addMovie}>Adicionar</button>
+                    <input className="text-gray-950 pl-2 rounded-md h-10 w-64" type="text" placeholder="Type title" onChange={event => setTitle(event.target.value)} />
+                    <input className="text-gray-950 pl-2 rounded-md h-10 w-64" type="text" placeholder="Type year" onChange={event => setYear(event.target.value)} />
+                    <input className="text-gray-950 pl-2 rounded-md h-10 w-64" type="text" placeholder="Type genre" onChange={event => setGenre(event.target.value)} />
+                    <button className="text-slate-100 bg-green-800 hover:bg-green-600  active:bg-green-700 active:shadow-inner rounded-md h-10 w-64" onClick={addMovie}>Add</button>
                 </section>
             )}
 
             {select === '4' && (
                 <section className="flex flex-col items-center gap-3 p-40 h-auto">
-                    <input className="text-gray-950 rounded-md h-10 w-64" type="text" placeholder="Inserir ID" onChange={event => setId(event.target.value)} />
-                    <input className="text-gray-950 rounded-md h-10 w-64" type="text" placeholder="Inserir título" onChange={event => setTitle(event.target.value)} />
-                    <input className="text-gray-950 rounded-md h-10 w-64" type="text" placeholder="Inserir ano" onChange={event => setYear(event.target.value)} />
-                    <input className="text-gray-950 rounded-md h-10 w-64" type="text" placeholder="Inserir gênero" onChange={event => setGenre(event.target.value)} />
-                    <button className="text-slate-100 bg-yellow-700 hover:bg-yellow-500  active:bg-yellow-600 active:shadow-inner rounded-md h-10 w-64" onClick={patchMovie}>Atualizar</button>
+                    <input className="text-gray-950 pl-2 rounded-md h-10 w-64" type="text" placeholder="Type ID" onChange={event => setId(event.target.value)} />
+                    <input className="text-gray-950 pl-2 rounded-md h-10 w-64" type="text" placeholder="Type title" onChange={event => setTitle(event.target.value)} />
+                    <input className="text-gray-950 pl-2 rounded-md h-10 w-64" type="text" placeholder="Type year" onChange={event => setYear(event.target.value)} />
+                    <input className="text-gray-950 pl-2 rounded-md h-10 w-64" type="text" placeholder="Type genre" onChange={event => setGenre(event.target.value)} />
+                    <button className="text-slate-100 bg-yellow-700 hover:bg-yellow-500  active:bg-yellow-600 active:shadow-inner rounded-md h-10 w-64" onClick={patchMovie}>Update</button>
                 </section>
             )}
 
             {select === '5' && (
                 <section className="flex flex-col items-center gap-3 p-40 h-auto">
-                    <input className="text-gray-950 rounded-md h-10 w-64" type="text" placeholder="Inserir ID" onChange={event => setId(event.target.value)} />
-                    <button className="text-slate-100 bg-red-700 hover:bg-red-500  active:bg-red-600 active:shadow-inner rounded-md h-10 w-64" onClick={deleteMovieById}>Deletar</button>
+                    <input className="text-gray-950 pl-2 rounded-md h-10 w-64" type="text" placeholder="Type ID" onChange={event => setId(event.target.value)} />
+                    <button className="text-slate-100 bg-red-700 hover:bg-red-500  active:bg-red-600 active:shadow-inner rounded-md h-10 w-64" onClick={deleteMovieById}>Delete</button>
                 </section>
             )}
         </>
