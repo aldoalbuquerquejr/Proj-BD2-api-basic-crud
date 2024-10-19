@@ -8,7 +8,7 @@ const logger = winston.createLogger({
         winston.format.timestamp({
             format: 'YYYY-MM-DD HH:mm:ss'
         }),
-        winston.format.printf(info => `${info.timestamp}:${info.message}`)
+        winston.format.printf(info => `${info.timestamp}: ${info.message}`)
     )
 });
 

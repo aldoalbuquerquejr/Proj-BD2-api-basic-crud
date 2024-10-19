@@ -13,11 +13,11 @@ app.use(routes);
 connectDatabase()
   .then(() => {
     app.listen(3000, () => {
-      console.log("Servidor ON!");
-      console.log("Banco de dados conectado com sucesso!");
+      console.log("Server ON!");
+      console.log("Database successfully connected!");
     });
   })
   .catch((error) => {
-    console.log("Falha ao tentar conectar bando de dados!");
+    console.log("Failed on connecting database!");
     console.log(error);
   });
