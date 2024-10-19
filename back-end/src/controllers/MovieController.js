@@ -1,74 +1,57 @@
 import Movie from "../models/Movie.js";
-import logger from "../logger/logger.js";
+import logger from "../logger/Logger.js";
 
-async function getMovies(request, response) {
+async function getMovies(request, response) {  //GET
   let register = "";
-  try{
-   const movies = await Movie.find();
-   register = movies;
-   if(register != ''){
-     logger.info('sucessfuly get movies');
-   }
-  }catch(error){
-   logger.error("couldn't get movies");
+  try {
+    const movies = await Movie.find();
+    register = movies;
+    if (register != "") {
+      logger.info('All movies successfully returned');
+    }
+  } catch (error) {
+    logger.error("Could not get movies");
   }
-   return response.status(200).json(register);
- }
-
-async function getMovieById(request, response) {
-  const id = request.params.id;
-  let register = "";
-  try{
-    const movie = await Movie.findById({ _id: id });
-    register = movie;
-    if(register != ""){
-      logger.info('sucessfuly get movie by id');
-    }
-  }catch(error){
-      logger.error("couldn't get movie by id");
-      return response.status(400).json({ response: "Movie has not been found!" });
-  
-    }
-  
   return response.status(200).json(register);
 }
 
-async function createMovie(request, response) {
-  const movie = request.body;
-  register = "";
-  try{
-    register = await Movie.create(movie);
-    if(register != ""){
-      logger.info('sucessfuly created movie');
+async function getMovieById(request, response) {  //GET BY ID
+  const id = request.params.id;
+  let register = "";
+  try {
+    const movie = await Movie.findById({ _id: id });
+    register = movie;
+    if (register != "") {
+      logger.info('Movie successfully got by ID');
     }
-  }catch(error){
-    logger.error("couldn't create movie");
+  } catch (error) {
+    logger.error("Could not get movie by id");
+    return response.status(400).json({ response: "Movie has not been found!" });
+  }
+
+  return response.status(200).json(register);
+}
+
+async function createMovie(request, response) {  //POST
+  const movie = request.body;
+  let register = "";
+  try {
+    register = await Movie.create(movie);
+    if (register != "") {
+      logger.info("Movie has been successfully added");
+    }
+  } catch (error) {
+    logger.error("Could not add movie");
     return response
       .status(400)
-      .json({ response: "Movie has not been created!", error: error.message });
+      .json({ response: "Movie has not been added!", error: error.message });
   }
   return response
     .status(201)
-    .json({ response: "Movie has been sucessfuly created!", newMovie });
+    .json({ response: "Movie has been sucessfuly added!", register });
 }
 
-async function deleteMovie(request, response) {
-  const id = request.params.id;
-  try{
-    await Movie.findByIdAndDelete({ _id: id });
-  }catch(error){
-    logger.error("couldn't delete movie");
-    return response
-      .status(400)
-      .json({ response: "Movie has not been found!", error: error.message });
-  }
-  logger.info('sucessfuly deleted movie');
-  return response
-    .status(200)
-    .json({ response: "Movie has been sucessfuly deleted!" });
-}
-
-async function updateMovie(request, response) {
+async function updateMovie(request, response) {  //PUT/PATCH
   const id = request.params.id;
   const { title, year, genre } = request.body;
   const updatedMovie = {
@@ -83,15 +66,31 @@ async function updateMovie(request, response) {
       { new: true }
     )
   } catch (error) {
-    logger.error("couldn't update movie");
+    logger.error("Could not update movie");
     return response
       .status(400)
       .json({ response: "Movie has not been found!", error: error.message });
   }
-  logger.info('sucessfuly updated movie');
+  logger.info('Movie has been successfully updated');
   return response
     .status(200)
     .json({ response: "Movie has been sucessfuly updated!" });
 }
 
-export { getMovies, createMovie, deleteMovie, updateMovie, getMovieById };
+async function deleteMovie(request, response) {  //DELETE
+  const id = request.params.id;
+  try {
+    await Movie.findByIdAndDelete({ _id: id });
+  } catch (error) {
+    logger.error("Could not delete movie");
+    return response
+      .status(400)
+      .json({ response: "Movie has not been found!", error: error.message });
+  }
+  logger.info('Movie has been successfully deleted');
+  return response
+    .status(200)
+    .json({ response: "Movie has been sucessfuly deleted!" });
+}
+
+export { getMovies, getMovieById, createMovie, updateMovie, deleteMovie };

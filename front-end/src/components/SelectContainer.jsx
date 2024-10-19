@@ -50,19 +50,22 @@ export function SelectContainer() {
 
     function getMoviebyId() {
         if (!id) {
-            window.alert('Requisição inválida!')
+            window.alert('Invalid request!')
             return
         }
         api.get(`/movies/${id}`).then(response => {
             console.log(response.data)
             setMovie(response.data)
+        }).catch(error => {
+            window.alert('Movie ID not found!');
+            console.error(error);
         })
         clearStates()
     }
 
     function addMovie() {
         if (!title || !year || !genre) {
-            window.alert('Requisição inválida!')
+            window.alert('Invalid request!')
             return
         }
         api.post('/movies', {
@@ -72,16 +75,17 @@ export function SelectContainer() {
         }).then(response => {
             console.log(response)
         })
+        window.alert('Movie has been successfully added!')
         clearStates()
         window.location.reload()
     }
 
     function patchMovie() {
         if (!id) {
-            window.alert('Requisição inválida!')
+            window.alert('Invalid request!')
             return
         } else if (!title && !year && !genre) {
-            window.alert('Campos inválidos!')
+            window.alert('Invalid inputs!')
             return
         }
         const data = {}
@@ -97,29 +101,50 @@ export function SelectContainer() {
         if (Object.keys(data).length === 0) {
             return
         }
-        api.patch(`/movies/${id}`, data).then(response => {
-            console.log(response)
+        api.get(`/movies/${id}`).then(response => {
+            api.patch(`/movies/${id}`, data).then(response => {
+                console.log(response);
+                window.alert('Movie has been successfully updated!');
+                clearStates();
+                window.location.reload();
+            }).catch(error => {
+                window.alert("Error updating movie!")
+                console.error(error);
+            })
+        }).catch(error => {
+            window.alert('Movie ID not found!');
+            console.error(error);
         })
-        clearStates()
-        window.location.reload()
     }
 
     function deleteMovieById() {
         if (!id) {
-            window.alert('Requisição inválida!')
+            window.alert('Invalid request!');
             return
         }
-        api.delete(`/movies/${id}`).then(response => {
-            console.log(response)
+        api.get(`/movies/${id}`).then(response => {
+            let answear = confirm("Are you sure you want to delete it?");
+            if (answear) {
+                api.delete(`/movies/${id}`).then(response => {
+                    console.log(response);
+                    window.alert('Movie has been successfully deleted!');
+                    clearStates();
+                    window.location.reload();
+                }).catch(error => {
+                    window.alert("Error deleting movie!")
+                    console.error(error);
+                })
+            }
+        }).catch(error => {
+            window.alert('Movie ID not found!');
+            console.error(error);
         })
-        clearStates()
-        window.location.reload()
     }
 
     return (
         <>
-            <p className="text-4xl"> MOVIE DATABASE - CRUD APPLICATION </p>
-            <p className="text-2xl">Chose one option!&#x1FAF5;</p>
+            <p className="text-6xl"> &#x1F3AC; MOVIE DATABASE &#x1F3A5; </p>
+            <p className="text-2xl">API Basic CRUD Application</p>
             <div className="flex flex-row gap-3">
                 <button className="text-slate-100 bg-violet-900 hover:bg-violet-700 active:bg-violet-800 active:shadow-inner rounded-md h-10 w-32" onClick={optionOne}>Get All</button>
                 <button className="text-slate-100 bg-violet-900 hover:bg-violet-700  active:bg-violet-800 active:shadow-inner rounded-md h-10 w-32" onClick={optionOTwo}>Get by ID</button>
