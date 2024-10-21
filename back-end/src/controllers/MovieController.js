@@ -39,6 +39,9 @@ async function createMovie(request, response) {  //POST
     register = await Movie.create(movie);
     if (register != "") {
       logger.info("Movie has been successfully added");
+      return response
+        .status(201)
+        .json({ response: "Movie has been sucessfuly added!", register });
     }
   } catch (error) {
     logger.error("Could not add movie");
@@ -46,9 +49,6 @@ async function createMovie(request, response) {  //POST
       .status(400)
       .json({ response: "Movie has not been added!", error: error.message });
   }
-  return response
-    .status(201)
-    .json({ response: "Movie has been sucessfuly added!", register });
 }
 
 async function updateMovie(request, response) {  //PUT/PATCH
@@ -85,7 +85,7 @@ async function deleteMovie(request, response) {  //DELETE
     logger.error("Could not delete movie");
     return response
       .status(400)
-      .json({ response: "Movie has not been found!", error: error.message });
+      .json({ response: "Movie has not been deleted!", error: error.message });
   }
   logger.info('Movie has been successfully deleted');
   return response
