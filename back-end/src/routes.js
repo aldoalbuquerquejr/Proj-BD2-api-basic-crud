@@ -9,9 +9,9 @@ import {
 
 const routes = Router();
 routes.get("/movies", getMovies);
-routes.post("/movies", createMovie);
-routes.delete("/movies/:id", deleteMovie);
-routes.patch("/movies/:id", updateMovie);
 routes.get("/movies/:id", getMovieById);
+routes.post("/movies", createMovie);
+routes.patch("/movies/:id", updateMovie);
+routes.delete("/movies/:id", deleteMovie);
 
 export default routes;
